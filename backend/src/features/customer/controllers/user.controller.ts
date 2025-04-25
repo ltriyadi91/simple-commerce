@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { UserService } from '../services/user.service';
-import { LoginInputTypes, RegisterInputTypes } from '../types/user.types';
+import { LoginInputTypes } from '../types/user.types';
+import UserRequest from '@/types/express';
+import { ERROR, SUCCESS } from '@/constants/messages';
+import { unifiedResponse } from 'uni-response';
+
 export class UserController {
   private userService: UserService;
 
@@ -15,7 +19,7 @@ export class UserController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const loginInputObj: LoginInputTypes = req.body; // Map request body to Obj
+      const loginInputObj: LoginInputTypes = req.body;
       const result = await this.userService.login(loginInputObj);
       res.status(result.success ? 200 : 400).json(result);
     } catch (error) {
@@ -23,14 +27,13 @@ export class UserController {
     }
   };
 
-  getProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getProfile = async (req: UserRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { userId } = req.params;
-  
-      if (userId) {
-        const result = await this.userService.getProfile(parseInt(userId, 10));
-        res.status(result.success ? 200 : 404).json(result);
+      if (!req.user) {
+        res.status(404).json(unifiedResponse(false, ERROR.USER_NOT_FOUND ));
+        return;
       }
+      res.status(200).json(unifiedResponse(true, SUCCESS.USER_FOUND,  req.user));
     } catch (error) {
       next(error);
     }

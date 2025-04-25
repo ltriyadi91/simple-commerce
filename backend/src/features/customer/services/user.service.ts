@@ -12,7 +12,7 @@ export class UserService {
 
   async login(loginInputObj: LoginInputTypes) {
     const { email, password } = loginInputObj;
-    const user = await this.userRepository.findUserByEmail(email);
+    const user = await this.userRepository.findCustomerUserByEmail(email);
 
     if (!user) {
       return unifiedResponse(false, ERROR.USER_NOT_FOUND);
@@ -23,14 +23,14 @@ export class UserService {
       return unifiedResponse(false, 'Invalid credentials');
     }
 
-    const token = generateToken(user.id, Role.ADMIN || 'user');
+    const token = generateToken(user.id, Role.CUSTOMER || 'user');
     return unifiedResponse(true, SUCCESS.LOGIN_SUCCESSFUL, { token });
   }
 
   async register(registerInputObj: RegisterInputTypes) {
     const { email, password, name } = registerInputObj;
 
-    const existingUser = await this.userRepository.findUserByEmail(email);
+    const existingUser = await this.userRepository.findCustomerUserByEmail(email);
     if (existingUser) {
       return unifiedResponse(false, ERROR.USER_EXISTS_WITH_EMAIL);
     }

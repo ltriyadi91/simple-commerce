@@ -4,7 +4,9 @@ import helmet from 'helmet';
 import swaggerUi from "swagger-ui-express"
 import YAML from "yamljs";
 
-import userRoutes from './features/customer/routes/user.routes';
+import customerUserRoutes from './features/customer/routes/user.routes';
+import customerProductsRoutes from "./features/customer/routes/product.routes";
+
 import { apiErrorHandler, unmatchedRoutes } from './middleware/api-error.middleware';
 import { pinoLogger, loggerMiddleware } from './middleware/pino-logger';
 import { rateLimiter } from './middleware/security.middleware';
@@ -33,7 +35,8 @@ app.get('/heartbeat', (req: Request, res: Response): void => {
 });
 
 // API Routes
-app.use('/api/v1/merchant', userRoutes);
+app.use('/api/v1/customer/users', customerUserRoutes);
+app.use('/api/v1/customer/products', customerProductsRoutes);
 
 // Error Handling Middleware (Optional)
 // For prisma error and other error

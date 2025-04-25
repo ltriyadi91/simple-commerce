@@ -7,9 +7,9 @@ export class UserRepository {
     this.prisma = prismaClient;
   }
 
-  async findUserByEmail(email: string) {
+  async findCustomerUserByEmail(email: string) {
     return this.prisma.user.findUnique({
-      where: { email },
+      where: { email, role: Role.CUSTOMER },
       select: {
         id: true,
         password: true,

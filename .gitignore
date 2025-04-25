@@ -11,7 +11,7 @@ backend/npm-debug.log
 backend/testem.log
 
 # System Files
-backend/.DS_Store
+.DS_Store
 backend/Thumbs.db
 
 # Local env files

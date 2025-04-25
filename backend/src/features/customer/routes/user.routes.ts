@@ -5,7 +5,7 @@ import { auth } from '../../../middleware/auth.middleware';
 import { validateRequest } from '../../../middleware/validation.middleware';
 import { UserController } from '../controllers/user.controller';
 import { UserRepository } from '../repositories/user.repository';
-import { loginSchema, registerSchema } from '../schemas/user.schema';
+import { loginSchema } from '../schemas/user.schema';
 import { UserService } from '../services/user.service';
 
 // Dependency Injection
