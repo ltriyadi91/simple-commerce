@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ProductService } from '../services/product.service';
-import { ProductsPaginationQueryTypes } from '../types/product.types';
+import { ProductsPaginationQueryTypes } from '@/types/product.types';
 
 export class ProductController {
   private productService: ProductService;

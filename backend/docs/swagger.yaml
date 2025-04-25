@@ -143,6 +143,60 @@ paths:
                 $ref: "#/components/schemas/Product"
         "500":
           description: Server error
+    get:
+      tags:
+        - admin-products
+      summary: Get all the products for merchant
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: title
+          in: query
+          description: Name of the product
+          required: false
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          description: Min price of the product
+          required: false
+          schema:
+            type: string
+        - name: maxPrice
+          in: query
+          description: Max price of the product
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort of the product
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Page size
+          required: false
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Product fetch successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "500":
+          description: Server error
+
 
   /api/v1/merchant/products/{id}:
     put:
@@ -318,7 +372,7 @@ paths:
         "500":
           description: Server error
 
-  /api/v1/merchant/login:
+  /api/v1/merchant/users/login:
     post:
       tags:
         - admin-users
@@ -335,82 +389,19 @@ paths:
         "500":
           description: Server error
 
-  /api/v1/merchant/login/{id}:
+  /api/v1/merchant/users/profile:
     get:
       tags:
         - admin-users
-      summary: Get a user by id
-      parameters:
-        - name: id
-          in: path
-          description: Id of the user
-          required: true
-          schema:
-            type: integer
+      summary: Get the info of the logged in user
       security:
         - BearerAuth: []
       responses:
         "200":
-          description: Get the user successfully
+          description: Get user info successfully
         "500":
           description: Server error
-
-    put:
-      tags:
-        - admin-users
-      summary: Update a user
-      parameters:
-        - name: id
-          in: path
-          description: Id of the user
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - name
-                - email
-              properties:
-                name:
-                  type: string
-                  description: the name of the user
-                  example: Lukman
-                email:
-                  type: string
-                  description: the email number of the user
-                  example: "triyadilukman@gmail.com"
-      security:
-        - BearerAuth: []
-      responses:
-        "200":
-          description: User updated successfully
-        "500":
-          description: Server error
-
-    delete:
-      tags:
-        - admin-users
-      summary: Delete a user
-      parameters:
-        - name: id
-          in: path
-          description: Id of the user
-          required: true
-          schema:
-            type: integer
-      security:
-        - BearerAuth: []
-      responses:
-        "200":
-          description: User deleted successfully
-        "500":
-          description: Server error
-
+          
   /api/v1/customer/cart/add:
     post:
       tags:

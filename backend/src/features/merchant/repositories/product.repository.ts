@@ -1,11 +1,15 @@
-import { PrismaClient } from '@prisma/client';
 import { ProductsFilterTypes } from '@/types/product.types';
+import { PrismaClient } from '@prisma/client';
 
 export class ProductRepository {
   private prisma: PrismaClient;
 
   constructor(prismaClient: PrismaClient) {
     this.prisma = prismaClient;
+  }
+
+  async getProductCount(filters: ProductsFilterTypes) {
+    return await this.prisma.product.count({ where: filters });
   }
 
   async findAllProducts(
@@ -28,26 +32,35 @@ export class ProductRepository {
         discount: true,
         quantity: true,
         description: true,
-        images: true
+        images: true,
+        sku: true,
+        id: true,
+        createdAt: true,
+        updatedAt: true,
       }
     });
   }
 
-  async getProductCount(filters: ProductsFilterTypes) {
-    return await this.prisma.product.count({ where: filters });
+  async create(data: any) {
+    return await this.prisma.product.create({ data });
   }
 
-  async findProductById(productId: number) {
+  async update(id: number, data: any) {
+    return await this.prisma.product.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async delete(id: number) {
+    return await this.prisma.product.delete({
+      where: { id },
+    });
+  }
+
+  async findById(id: number) {
     return await this.prisma.product.findUnique({
-      where: { id: productId },
-      select: {
-        title: true,
-        price: true,
-        discount: true,
-        quantity: true,
-        description: true,
-        images: true
-      }
+      where: { id },
     });
   }
 }

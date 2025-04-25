@@ -13,20 +13,6 @@ export class UserController {
     this.userService = userService;
   }
 
-  registerUser = async (req: UserRequest, res: Response) => {
-    const { name, email, password, password2 } = req.body;
-    try {
-      const user = await this.userService.register({ name, email, password, password2 });
-
-      res.status(200).json(user);
-    } catch (err) {
-      res.status(400).json({
-        message: "Error in registering the user",
-        err,
-      });
-    }
-  };
-
   login = async (
     req: Request<{}, {}, LoginInputTypes>,
     res: Response,

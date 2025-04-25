@@ -1,11 +1,16 @@
-import { ProductRepository } from '../repositories/product.repository';
-import { calculateDiscountedPrice } from '@/util/discount.util';
-import { ProductsPaginationQueryTypes, ProductsFilterTypes } from '@/types/product.types';
 import { unifiedResponse } from 'uni-response';
-import { ERROR, SUCCESS } from '@/constants/messages';
+import { ProductRepository } from '../repositories/product.repository';
+import skuGenerator from '@/util/sku.util';
+import { SUCCESS } from '@/constants/messages';
+import { calculateDiscountedPrice } from '@/util/discount.util';
+import { ProductsFilterTypes, ProductsPaginationQueryTypes } from '@/types/product.types';
 
 export class ProductService {
-  constructor(private readonly productRepository: ProductRepository) {}
+  private productRepository: ProductRepository;
+
+  constructor(productRepository: ProductRepository) {
+    this.productRepository = productRepository;
+  }
 
   async findAllProducts(query: ProductsPaginationQueryTypes) {
     const { title, minPrice, maxPrice, sort, order, page, limit } = query;
@@ -38,9 +43,31 @@ export class ProductService {
     })
   }
 
-  async findProductById(productId: number) {
-    const product = await this.productRepository.findProductById(productId);
-    if (!product) return unifiedResponse(false, ERROR.PRODUCT_NOT_FOUND);
-    return unifiedResponse(true, SUCCESS.PRODUCT_FOUND, product);
+  async createProduct(productData: any) {
+    const data = {
+      ...productData,
+      sku: skuGenerator(productData.title),
+      price: parseFloat(productData.price),
+      quantity: parseInt(productData.quantity),
+      discount: parseFloat(productData.discount),
+    };
+    return await this.productRepository.create(data);
+  }
+
+  async updateProduct(id: number, productData: any) {
+    return await this.productRepository.update(id, {
+      ...productData,
+      price: parseFloat(productData.price),
+      quantity: parseInt(productData.quantity),
+      discount: parseFloat(productData.discount),
+    });
+  }
+
+  async deleteProduct(id: number) {
+    return await this.productRepository.delete(id);
+  }
+
+  async getProductById(id: number) {
+    return await this.productRepository.findById(id);
   }
 }
