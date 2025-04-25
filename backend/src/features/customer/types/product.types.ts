@@ -1,5 +1,5 @@
 export interface ProductsPaginationQueryTypes {
-  name: string
+  title: string
   minPrice: string
   maxPrice: string
   sort: string
@@ -9,7 +9,7 @@ export interface ProductsPaginationQueryTypes {
 }
 
 export interface ProductsFilterTypes {
-  name?: string
+  title?: string
   price?: {
     gte?: number
     lte?: number

@@ -8,14 +8,14 @@ export class ProductService {
   constructor(private readonly productRepository: ProductRepository) {}
 
   async findAllProducts(query: ProductsPaginationQueryTypes) {
-    const { name, minPrice, maxPrice, sort, order, page, limit } = query;
+    const { title, minPrice, maxPrice, sort, order, page, limit } = query;
 
     const pageNumber = parseInt(page);
     const pageSize = parseInt(limit);
     const skip = (pageNumber - 1) * pageSize;
 
     const filters: ProductsFilterTypes = {};
-    if (name) filters.name = name;
+    if (title) filters.title = title;
     if (minPrice) filters.price = { gte: parseInt(minPrice) };
     if (maxPrice) filters.price = { ...filters.price, lte: parseInt(maxPrice) };
 

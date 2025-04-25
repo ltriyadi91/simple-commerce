@@ -36,7 +36,7 @@ components:
         - description
         - price
       properties:
-        name:
+        title:
           type: string
           description: the name of the product
           example: product name
@@ -49,14 +49,10 @@ components:
           format: float
           description: the price of the product
           example: "120000"
-        stock:
+        quantity:
           type: integer
-          description: the quantity of the product in stock
+          description: the quantity of the product in quantity
           example: "20"
-        isDiscounted:
-          type: boolean
-          description: Enable or disable product discount
-          example: false
         discount:
           type: number
           description: product discount amount
@@ -206,7 +202,7 @@ paths:
         - products
       summary: Get all the products
       parameters:
-        - name: name
+        - name: title
           in: query
           description: Name of the product
           required: false

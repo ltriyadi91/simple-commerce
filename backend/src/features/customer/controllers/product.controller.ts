@@ -15,9 +15,9 @@ export class ProductController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { name, minPrice, maxPrice, sort, order, page, limit } = req.query;
+      const { title, minPrice, maxPrice, sort, order, page, limit } = req.query;
       const result = await this.productService.findAllProducts({
-        name,
+        title,
         minPrice,
         maxPrice,
         sort,
@@ -28,6 +28,7 @@ export class ProductController {
 
       res.status(200).json(result);
     } catch (error) {
+      console.error(error);
       next(error);
     }
   }
