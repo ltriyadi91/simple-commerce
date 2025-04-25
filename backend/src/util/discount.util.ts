@@ -5,11 +5,11 @@ const prisma = new PrismaClient({
 });
 
 export const calculateDiscountedPrice = (price: number, discount: number | null) => {
-  if (!discount || discount <= 0) return price; // no discount
-  return price - (price * discount) / 100; // apply discounta
+  if (!discount || discount <= 0) return price;
+  return price - (price * discount) / 100;
 };
 
-export const calculateDiscountedAmount = async (cart: any, couponCode: string | undefined) => {
+export const calculateDiscountedAmount = async (cart: any) => {
   let totalAmount = 0;
   let finalAmount = 0;
   let productDiscountAmount = 0;

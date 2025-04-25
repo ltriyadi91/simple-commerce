@@ -6,6 +6,7 @@ import YAML from "yamljs";
 
 import customerUserRoutes from './features/customer/routes/user.routes';
 import customerProductsRoutes from "./features/customer/routes/product.routes";
+import customerCartRoutes from "./features/customer/routes/cart.routes";
 
 import { apiErrorHandler, unmatchedRoutes } from './middleware/api-error.middleware';
 import { pinoLogger, loggerMiddleware } from './middleware/pino-logger';
@@ -37,6 +38,7 @@ app.get('/heartbeat', (req: Request, res: Response): void => {
 // API Routes
 app.use('/api/v1/customer/users', customerUserRoutes);
 app.use('/api/v1/customer/products', customerProductsRoutes);
+app.use('/api/v1/customer/cart', customerCartRoutes);
 
 // Error Handling Middleware (Optional)
 // For prisma error and other error
