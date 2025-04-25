@@ -40,6 +40,14 @@ export class ProductRepository {
   async findProductById(productId: number) {
     return await this.prisma.product.findUnique({
       where: { id: productId },
+      select: {
+        title: true,
+        price: true,
+        discount: true,
+        quantity: true,
+        description: true,
+        images: true
+      }
     });
   }
 }
