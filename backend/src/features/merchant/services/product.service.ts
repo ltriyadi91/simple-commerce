@@ -6,11 +6,7 @@ import { calculateDiscountedPrice } from '@/util/discount.util';
 import { ProductsFilterTypes, ProductsPaginationQueryTypes } from '@/types/product.types';
 
 export class ProductService {
-  private productRepository: ProductRepository;
-
-  constructor(productRepository: ProductRepository) {
-    this.productRepository = productRepository;
-  }
+  constructor(private readonly productRepository: ProductRepository) {}
 
   async findAllProducts(query: ProductsPaginationQueryTypes) {
     const { title, minPrice, maxPrice, sort, order, page, limit } = query;

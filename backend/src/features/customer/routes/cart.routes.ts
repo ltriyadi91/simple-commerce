@@ -5,7 +5,7 @@ import { CartService } from '../services/cart.service';
 import { CartController } from '../controllers/cart.controller';
 import { validateRequest } from '@/middleware/validation.middleware';
 import { createCartSchema, updateCartSchema } from '../schemas/cart.schema';
-import { auth } from '@/middleware/auth.middleware';
+import { auth, authorizedRoles } from '@/middleware/auth.middleware';
 
 const prismaService = PrismaService.getInstance();
 const prisma = prismaService.client;
@@ -15,6 +15,7 @@ const cartController = new CartController(cartService);
 
 const router = Router();
 router.use(auth);
+router.use(authorizedRoles('CUSTOMER'));
 
 router.post('/add', validateRequest(createCartSchema), cartController.addToCart);
 

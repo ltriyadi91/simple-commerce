@@ -114,7 +114,7 @@ components:
         productId:
           type: integer
           description: the id of the product
-          example: "10"
+          example: "5"
         quantity:
           type: integer
           description: the quantity of the product

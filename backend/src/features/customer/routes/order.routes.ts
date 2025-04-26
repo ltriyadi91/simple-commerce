@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { OrderController } from '../controllers/order.controller';
 import { OrderRepository } from '../repositories/order.repository';
 import { OrderService } from '../services/order.service';
-import { auth } from '@/middleware/auth.middleware';
+import { auth, authorizedRoles } from '@/middleware/auth.middleware';
 import { PrismaService } from '@/config/prisma.config';
 import { CartRepository } from '../repositories/cart.repository';
 
@@ -16,6 +16,7 @@ const orderController = new OrderController(orderService);
 
 const router = Router();
 router.use(auth);
+router.use(authorizedRoles('CUSTOMER'));
 
 // Place order
 router.post('/', auth, orderController.placeOrder);

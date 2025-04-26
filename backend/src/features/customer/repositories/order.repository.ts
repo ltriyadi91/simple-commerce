@@ -26,7 +26,13 @@ export class OrderRepository {
       include: {
         items: {
           include: {
-            product: true,
+            product: {
+              select: {
+                title: true,
+                price: true,
+                images: true,
+              }
+            },
           },
         },
       },
@@ -45,7 +51,13 @@ export class OrderRepository {
       include: {
         items: {
           include: {
-            product: true,
+            product: {
+              select: {
+                title: true,
+                price: true,
+                images: true,
+              }
+            },
           },
         },
       },
