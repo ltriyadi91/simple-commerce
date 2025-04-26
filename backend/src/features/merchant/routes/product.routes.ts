@@ -20,20 +20,19 @@ router.use(auth);
 router.use(authorizedRoles("ADMIN"));
 
 router.get('/', productController.findAllProducts);
-
 router.post(
   "/",
-  auth,
   validateRequest(productSchema),
   productController.createProduct
 );
-
+router.get('/:id', productController.findProductById);
 router.put(
   "/:id",
-  auth,
   validateRequest(productSchema),
   productController.updateProduct
 );
-router.delete("/:id", auth, productController.deleteProduct);
+router.delete("/:id", productController.deleteProduct);
+router.post('/file', productController.uploadProductImage);
+router.post('/image', productController.getAwsFileSignedUrl);
 
 export default router;

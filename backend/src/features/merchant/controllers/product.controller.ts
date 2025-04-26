@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { ProductService } from '../services/product.service';
 import { ProductsPaginationQueryTypes } from '@/types/product.types';
+import { getFileUrlFromAws, uploadFileToAws } from '@/middleware/aws-s3.middleware';
+import formidable from 'formidable';
 
 export class MerchantProductController {
   private productService: ProductService;
@@ -33,6 +35,23 @@ export class MerchantProductController {
     }
   }
 
+  findProductById = async (req: Request, res: Response): Promise<void> => {
+    const productId = parseInt(req.params.id);
+
+    try {
+      const product = await this.productService.getProductById(productId);
+
+      if (!product) {
+        res.status(404).json({ message: 'Product not found' });
+        return;
+      }
+
+      res.status(200).json(product);
+    } catch (err) {
+      res.status(500).json({ message: 'Error in getting the product' });
+    }
+  }
+
   createProduct = async (req: Request, res: Response) => {
     try {
       const product = await this.productService.createProduct(req.body);
@@ -62,22 +81,55 @@ export class MerchantProductController {
     }
   }
 
-  // async uploadImage(req: Request, res: Response) {
-  //   try {
-  //     const productId = parseInt(req.params.id);
-  //     const imageUrl = req.file
-  //       ? path.posix.join('/uploads/products', req.file.filename)
-  //       : undefined;
+  uploadProductImage = async (req: Request, res: Response, next: NextFunction) => {
+    const form = formidable({
+      maxFileSize: 1 * 1024 * 1024, // 1MB limit
+      keepExtensions: true,
+      multiples: true,
+    });
 
-  //     if (!imageUrl) {
-  //       res.status(400).json({ message: 'No image provided' });
-  //       return;
-  //     }
+    try {
+      const [_, files] = await new Promise<[any, any]>((resolve, reject) => {
+        form.parse(req, (err, fields, files) => {
+          if (err) reject(err);
+          resolve([fields, files]);
+        });
+      });
 
-  //     await this.productService.uploadProductImage(productId, imageUrl);
-  //     res.status(200).json({ message: 'Image uploaded successfully' });
-  //   } catch (err) {
-  //     res.status(500).json({ message: 'Error in uploading image', err });
-  //   }
-  // }
+      // Support both single and multiple files
+      const images = Array.isArray(files.image) ? files.image : [files.image];
+
+      const uploadResults = [];
+      for (const file of images) {
+        const originalname = file.originalFilename;
+        const path = file.filepath;
+
+        if (!originalname || !path) {
+          throw new Error('File name or path is missing');
+        }
+
+        const data = await uploadFileToAws(originalname, path);
+        if (data) {
+          uploadResults.push(originalname);
+        }
+      }
+
+      res.status(200).json({ 
+        success: true,
+        files: uploadResults
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  getAwsFileSignedUrl = async (req: Request, res: Response) => {
+    try {
+      const fileName = req.body.key;
+      const url = await getFileUrlFromAws(fileName, 3600);
+      res.status(200).json({ url });
+    } catch (error) {
+      res.status(500).json({ message: 'Error in getting the signed url', error });
+    }
+  }
 }

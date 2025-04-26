@@ -4,6 +4,7 @@ import skuGenerator from '@/util/sku.util';
 import { SUCCESS } from '@/constants/messages';
 import { calculateDiscountedPrice } from '@/util/discount.util';
 import { ProductsFilterTypes, ProductsPaginationQueryTypes } from '@/types/product.types';
+import { uploadFileToAws } from '@/middleware/aws-s3.middleware';
 
 export class ProductService {
   constructor(private readonly productRepository: ProductRepository) {}

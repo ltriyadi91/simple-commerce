@@ -6,6 +6,10 @@ export const envSchema = z.object({
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
   DATABASE_URL: z.string().url(),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
+  AWS_BUCKET_NAME : z.string(),
+  AWS_ACCESS_KEY_ID : z.string(),
+  AWS_SECRET_ACCESS_KEY : z.string(),
+  AWS_REGION : z.string(),
   WHITE_LIST_URLS: z
     .string()
     .transform(value => value.split(',').map(url => url.trim()))
