@@ -15,7 +15,7 @@ export class ProductController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { title, minPrice, maxPrice, sort, order, page, limit } = req.query;
+      const { title = "", minPrice, maxPrice, sort = "title", order = "asc", page, limit } = req.query;
       const result = await this.productService.findAllProducts({
         title,
         minPrice,

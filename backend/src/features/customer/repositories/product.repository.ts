@@ -24,6 +24,7 @@ export class ProductRepository {
       take,
       select: {
         title: true,
+        id: true,
         price: true,
         discount: true,
         quantity: true,
