@@ -1,5 +1,6 @@
 import { OrderStatus } from "@prisma/client";
 import { MerchantOrderRepository } from "../repositories/order.repository";
+import { unifiedResponse } from "uni-response";
 
 export class MerchantOrderService {
   constructor(private orderRepository: MerchantOrderRepository) {}
@@ -20,7 +21,7 @@ export class MerchantOrderService {
       this.orderRepository.countOrders(filters),
     ]);
 
-    return {
+    const result = {
       data: orders,
       pagination: {
         total: totalCount,
@@ -29,13 +30,24 @@ export class MerchantOrderService {
         limit: pageSize,
       },
     };
+
+    return unifiedResponse(true, "Orders fetched successfully", result);
   }
 
   async getOrderById(id: number) {
-    return this.orderRepository.getOrderById(id);
+    const order = await this.orderRepository.getOrderById(id);
+    if (!order) {
+      return unifiedResponse(false, "Order not found", null);
+    }
+    return unifiedResponse(true, "Order fetched successfully", order);
   }
 
   async updateOrderStatus(id: number, status: OrderStatus) {
-    return this.orderRepository.updateOrderStatus(id, status);
+    const order = await this.orderRepository.getOrderById(id);
+    if (!order) {
+      return unifiedResponse(false, "Order not found", null);
+    }
+    const updatedOrder = await this.orderRepository.updateOrderStatus(id, status);
+    return unifiedResponse(true, "Order status updated successfully", updatedOrder);
   }
 }

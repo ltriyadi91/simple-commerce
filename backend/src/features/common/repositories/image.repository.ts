@@ -35,4 +35,16 @@ export class ImageRepository {
       where: { id },
     });
   }
+
+  async deleteImageByProductId(id: number) {
+    return this.prisma.image.deleteMany({
+      where: { productId: id },
+    });
+  }
+
+  async createMany(images: { url: string, productId: number }[]): Promise<void> {
+    await this.prisma.image.createMany({
+      data: images,
+    });
+  }
 }

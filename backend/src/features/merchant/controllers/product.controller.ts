@@ -57,6 +57,7 @@ export class MerchantProductController {
       const product = await this.productService.createProduct(req.body);
       res.status(201).json({ message: 'Product created successfully', product });
     } catch (err) {
+      console.log('error brooo', { err});
       res.status(500).json({ message: 'Error in creating the product', err });
     }
   }

@@ -1,3 +1,6 @@
+import { ProductSchema } from "@/features/merchant/schemas/product.schema";
+import z from "zod";
+
 export interface ProductsPaginationQueryTypes {
   title: string;
   minPrice: string;
@@ -15,3 +18,5 @@ export interface ProductsFilterTypes {
     lte?: number;
   };
 }
+
+export type ProductInputType = z.infer<typeof ProductSchema>;

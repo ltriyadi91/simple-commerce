@@ -25,7 +25,7 @@ export class ImageController {
       });
 
       const images = Array.isArray(files.image) ? files.image : [files.image];
-      const uploadResults = await this.imageService.uploadImages(images);
+      const uploadResults = await this.imageService.uploadImagesToBucket(images);
 
       res.status(200).json({ success: true, files: uploadResults });
     } catch (error) {

@@ -1,6 +1,7 @@
 import { calculateDiscountedAmount } from '@/util/discount.util';
 import { OrderRepository } from '../repositories/order.repository';
 import { CartRepository } from '../repositories/cart.repository';
+import { unifiedResponse } from 'uni-response';
 
 export class OrderService {
   private orderRepository: OrderRepository;
@@ -47,14 +48,16 @@ export class OrderService {
     await this.cartRepository.clearCartItem(userId);
     await this.orderRepository.deleteCartByUserId(userId);
 
-    return order;
+    return unifiedResponse(true, 'Order placed successfully', order);
   }
 
   async getOrders(userId: number) {
-    return await this.orderRepository.getOrdersByUserId(userId);
+    const orders = await this.orderRepository.getOrdersByUserId(userId);
+    return unifiedResponse(true, 'Orders fetched successfully', orders);
   }
 
   async getOrder(orderId: number, userId: number) {
-    return await this.orderRepository.getOrderByIdAndUserId(orderId, userId);
+    const order = await this.orderRepository.getOrderByIdAndUserId(orderId, userId);
+    return unifiedResponse(true, 'Order fetched successfully', order);
   }
 }

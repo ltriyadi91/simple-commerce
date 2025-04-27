@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-export const productSchema = z.object({
+export const ProductSchema = z.object({
+  id: z.number().optional(),
   title: z
     .string()
     .min(2, 'Product name must be at least 2 characters')
@@ -16,4 +17,6 @@ export const productSchema = z.object({
     .min(0, 'Discount must be 0 or higher')
     .max(100, 'Discount cannot exceed 100%')
     .optional(),
+  images: z.array(z.string()).nullable(),
+  deletedImageIds: z.array(z.number()).optional(),
 });

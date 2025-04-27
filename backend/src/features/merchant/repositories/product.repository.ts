@@ -32,23 +32,38 @@ export class ProductRepository {
         discount: true,
         quantity: true,
         description: true,
-        images: true,
+        images: {
+          select: {
+            url: true,
+            id: true,
+          }
+        },
         sku: true,
         id: true,
         createdAt: true,
         updatedAt: true,
-      }
+      },
     });
   }
 
   async create(data: any) {
-    return await this.prisma.product.create({ data });
+    console.log('cuuuk', {data});
+    return await this.prisma.product.create({
+      data: {
+        ...data,
+        images: data.images?.length ? {
+          create: data.images.map((image: string) => ({ url: image }))
+        } : undefined
+      },
+      select: { id: true }
+    });
   }
 
   async update(id: number, data: any) {
     return await this.prisma.product.update({
       where: { id },
       data,
+      select: { id: true },
     });
   }
 
@@ -61,6 +76,23 @@ export class ProductRepository {
   async findById(id: number) {
     return await this.prisma.product.findUnique({
       where: { id },
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        discount: true,
+        quantity: true,
+        description: true,
+        images: {
+          select: {
+            url: true,
+            id: true,
+          }
+        },
+        sku: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 }

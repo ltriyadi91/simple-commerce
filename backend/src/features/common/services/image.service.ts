@@ -1,7 +1,7 @@
 import { uploadFileToAws, getFileUrlFromAws } from '@/middleware/aws-s3.middleware';
 
 export class ImageService {
-  async uploadImages(images: any[]) {
+  async uploadImagesToBucket(images: any[]) {
     const uploadResults = [];
     for (const file of images) {
       const originalname = file.originalFilename;

@@ -16,17 +16,19 @@ export class CartService {
 
     const existingItem = await this.cartRepository.findCartItemByCartIdAndProductId(cart.id, productId);
     if (existingItem) {
-      return await this.cartRepository.updateCartItemQuantity(
+      const updatedItem = await this.cartRepository.updateCartItemQuantity(
         existingItem.id,
         existingItem.quantity + quantity,
       );
+      return unifiedResponse(true, 'Item added to cart', updatedItem);
     } else {
-      return await this.cartRepository.createCartItem({
+      const newItem = await this.cartRepository.createCartItem({
         cartId: cart.id,
         productId,
         quantity,
         price: product.price,
       });
+      return unifiedResponse(true, 'Item added to cart', newItem);
     }
   }
 
@@ -65,7 +67,7 @@ export class CartService {
     const cart = await this.cartRepository.findUserCart(userId);
     if (!cart) throw new Error('Cart not found');
 
-    const deletedCart = await this.cartRepository.clearCart(cart.id);
+    const deletedCart = await this.cartRepository.clearCartItem(cart.id);
     return unifiedResponse(true, 'Cart cleared', deletedCart);
   }
 }

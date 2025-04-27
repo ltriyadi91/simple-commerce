@@ -33,4 +33,7 @@ export const SUCCESS = {
   // product success messages
   PRODUCT_FOUND: 'Product Found',
   PRODUCT_LIST_FOUND: 'Product List Found',
+  PRODUCT_DELETED: 'Product Deleted',
+  PRODUCT_UPDATED: 'Product Updated',
+  PRODUCT_CREATED: 'Product Created',
 };

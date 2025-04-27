@@ -1,12 +1,28 @@
 import { unifiedResponse } from 'uni-response';
 import { ProductRepository } from '../repositories/product.repository';
+import { ImageRepository } from '../../common/repositories/image.repository';
 import skuGenerator from '@/util/sku.util';
-import { SUCCESS } from '@/constants/messages';
+import { ERROR, SUCCESS } from '@/constants/messages';
 import { calculateDiscountedPrice } from '@/util/discount.util';
-import { ProductsFilterTypes, ProductsPaginationQueryTypes } from '@/types/product.types';
+import { ProductsFilterTypes, ProductsPaginationQueryTypes, ProductInputType } from '@/types/product.types';
+import { env } from '@/config/env-config';
+
+const productItemFormater = (product: any) => {
+  return {
+    ...product,
+    finalPrice: calculateDiscountedPrice(product.price, product.discount),
+    images: product.images.map((image: { url: string, id: number }) => ({
+      ...image,
+      url: `${env.AWS_S3_ENDPOINT}${image.url}`,
+    })),
+  };
+}
 
 export class ProductService {
-  constructor(private productRepository: ProductRepository) {}
+  constructor(
+    private productRepository: ProductRepository,
+    private imageRepository: ImageRepository,
+  ) {}
 
   async findAllProducts(query: ProductsPaginationQueryTypes) {
     const { title, minPrice, maxPrice, sort, order, page, limit } = query;
@@ -21,11 +37,17 @@ export class ProductService {
     if (maxPrice) filters.price = { ...filters.price, lte: parseInt(maxPrice) };
 
     const totalCount = await this.productRepository.getProductCount(filters);
-    const products = await this.productRepository.findAllProducts(filters, sort, order, skip, pageSize);
+    const products = await this.productRepository.findAllProducts(
+      filters,
+      sort,
+      order,
+      skip,
+      pageSize,
+    );
 
     const productsWithFinalPrice = products.map(product => ({
       ...product,
-      finalPrice: calculateDiscountedPrice(product.price, product.discount),
+      ...productItemFormater(product),
     }));
 
     return unifiedResponse(true, SUCCESS.PRODUCT_LIST_FOUND, {
@@ -36,34 +58,59 @@ export class ProductService {
         page: pageNumber,
         limit: pageSize,
       },
-    })
+    });
   }
 
-  async createProduct(productData: any) {
+  async createProduct(productData: ProductInputType) {
     const data = {
       ...productData,
       sku: skuGenerator(productData.title),
-      price: parseFloat(productData.price),
-      quantity: parseInt(productData.quantity),
-      discount: parseFloat(productData.discount),
+      price: productData.price,
+      quantity: productData.quantity,
+      discount: productData.discount,
     };
-    return await this.productRepository.create(data);
+
+    const result = await this.productRepository.create(data);
+    return result;
   }
 
-  async updateProduct(id: number, productData: any) {
-    return await this.productRepository.update(id, {
+  async updateProduct(id: number, productData: ProductInputType) {
+    const result =  await this.productRepository.update(id, {
       ...productData,
-      price: parseFloat(productData.price),
-      quantity: parseInt(productData.quantity),
-      discount: parseFloat(productData.discount),
+      price: productData.price,
+      quantity: productData.quantity,
+      discount: productData.discount?.toFixed(2),
+    }).then(() => {
+      if (productData.deletedImageIds) {
+        this.imageRepository.deleteImageByProductId(id);
+      }
+    });
+
+    return unifiedResponse(true, SUCCESS.PRODUCT_UPDATED, {
+      data: result,
     });
   }
 
   async deleteProduct(id: number) {
-    return await this.productRepository.delete(id);
+    const product = await this.productRepository.findById(id);
+    if (!product) {
+      return unifiedResponse(false, ERROR.PRODUCT_NOT_FOUND, {
+        data: null,
+      })
+    }
+    const deletedProduct = await this.productRepository.delete(id);
+    return unifiedResponse(true, SUCCESS.PRODUCT_DELETED, {
+      data: deletedProduct,
+    });
   }
 
   async getProductById(id: number) {
-    return await this.productRepository.findById(id);
+    let data = await this.productRepository.findById(id);
+    if (data) {
+      data = productItemFormater(data);
+    }
+    return unifiedResponse(true, SUCCESS.PRODUCT_FOUND, {
+      data,
+    })
   }
 }
