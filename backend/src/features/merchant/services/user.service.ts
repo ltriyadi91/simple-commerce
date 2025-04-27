@@ -8,7 +8,7 @@ import { LoginInputTypes } from '../types/user.types';
 import { Role } from '@prisma/client';
 
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private userRepository: UserRepository) {}
 
   async login(loginInputObj: LoginInputTypes) {
     const { email, password } = loginInputObj;

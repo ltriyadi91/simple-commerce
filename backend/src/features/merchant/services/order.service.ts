@@ -2,7 +2,7 @@ import { OrderStatus } from "@prisma/client";
 import { MerchantOrderRepository } from "../repositories/order.repository";
 
 export class MerchantOrderService {
-  constructor(private readonly orderRepository: MerchantOrderRepository) {}
+  constructor(private orderRepository: MerchantOrderRepository) {}
 
   async getAllOrders(query: any) {
     const { userId, status, sort = "createdAt", order = "desc", page = "1", limit = "10" } = query;

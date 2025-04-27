@@ -8,15 +8,18 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String
-  role      Role     @default(CUSTOMER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Cart      Cart?
-  Order     Order[]
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  name        String
+  role        Role     @default(CUSTOMER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String?  @default("system")
+  updatedBy   String?
+  updatedById Int?
+  Cart        Cart?
+  Order       Order[]
 }
 
 model Product {
@@ -29,6 +32,8 @@ model Product {
   discount    Float?      @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  createdBy   String?     @default("system")
+  updatedBy   String?
   images      Image[]
   CartItem    CartItem[]
   OrderItem   OrderItem[]
@@ -41,25 +46,33 @@ model Image {
   product   Product  @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  createdBy String?  @default("system")
+  updatedBy String?
 }
 
 model Cart {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  createdBy String?    @default("system")
+  updatedBy String?
   userId    Int        @unique
   user      User       @relation(fields: [userId], references: [id])
   items     CartItem[]
 }
 
 model CartItem {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   quantity  Int
   price     Float
   cartId    Int
   productId Int
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id])
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?  @default("system")
+  updatedBy String?
 }
 
 model Order {
@@ -68,6 +81,8 @@ model Order {
   totalAmount Float
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  createdBy   String?     @default("system")
+  updatedBy   String?
   status      OrderStatus @default(UNPAID)
   discount    Float?
   finalAmount Float
@@ -76,13 +91,17 @@ model Order {
 }
 
 model OrderItem {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   orderId   Int
   productId Int
   quantity  Int
   price     Float
-  order     Order   @relation(fields: [orderId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  createdBy String?  @default("system")
+  updatedBy String?
 }
 
 enum Role {
