@@ -32,7 +32,5 @@ router.put(
   productController.updateProduct
 );
 router.delete("/:id", productController.deleteProduct);
-router.post('/file', productController.uploadProductImage);
-router.post('/image', productController.getAwsFileSignedUrl);
 
 export default router;

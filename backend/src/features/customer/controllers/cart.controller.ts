@@ -40,7 +40,6 @@ export class CartController {
     const { itemId } = req.params;
     const { quantity } = req.body;
     try {
-      console.log({ itemId, quantity})
       const updatedItem = await this.cartService.updateCartItem(parseInt(itemId), quantity);
       res.status(200).json(updatedItem);
     } catch (err) {

@@ -12,6 +12,7 @@ import customerOrderRoutes from "./features/customer/routes/order.routes";
 import merchantUserRoutes from "./features/merchant/routes/user.routes";
 import merchantProductRoutes from "./features/merchant/routes/product.routes";
 import merchantOrdrerRoutes from "./features/merchant/routes/order.routes";
+import commonImageRoutes from "./features/common/routes/image.routes";
 
 import { apiErrorHandler, unmatchedRoutes } from './middleware/api-error.middleware';
 import { pinoLogger, loggerMiddleware } from './middleware/pino-logger';
@@ -49,6 +50,9 @@ app.use('/api/v1/customer/orders', customerOrderRoutes);
 app.use("/api/v1/merchant/users", merchantUserRoutes);
 app.use("/api/v1/merchant/products", merchantProductRoutes);
 app.use("/api/v1/merchant/orders", merchantOrdrerRoutes);
+
+app.use("/api/v1/common", commonImageRoutes);
+
 
 // Error Handling Middleware (Optional)
 // For prisma error and other error

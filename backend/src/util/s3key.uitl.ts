@@ -9,5 +9,5 @@ export const generateS3KeyName = (originalFileName: string): string => {
     .replace(/\.[^/.]+$/, '') // remove extension
     .replace(/[\s_]+/g, '-')
     .toLowerCase();
-  return `products/${YYYY}-${MM}-${dd}/${baseName}.png`;
+  return `products/${YYYY}-${MM}-${dd}/${baseName}`;
 }

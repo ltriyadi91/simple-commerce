@@ -54,7 +54,6 @@ export const getFileUrlFromAws = async (fileName: string, expireTime: number) =>
   try {
     // Check if the file is available in the AWS S3 bucket
     const check = await isFileAvailableInAwsBucket(fileName);
-    console.log({ check })
 
     if (check) {
       const command = new GetObjectCommand({
@@ -63,20 +62,18 @@ export const getFileUrlFromAws = async (fileName: string, expireTime: number) =>
       });
 
       const url = await getSignedUrl(s3Client, command, expireTime ? {} : { expiresIn: expireTime });
-      console.log({ url });
       return url;
     } else {
       return 'error';
     }
   } catch (err) {
     // Handle any errors that occur during the process
-    console.log('error ::', err);
+    console.log('error', err);
     return 'error';
   }
 };
 
 export const isFileAvailableInAwsBucket = async (fileName: string) => {
-  console.log('fileName', fileName);
   try {
     // Check if the object exists
     await s3Client.send(

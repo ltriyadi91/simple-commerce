@@ -55,7 +55,6 @@ export class CartService {
 
   async updateCartItem(itemId: number, quantity: number) {
     const item = await this.cartRepository.findCartItemById(itemId);
-    console.log({ item })
     if (!item) throw new Error('Cart item not found');
 
     const updatedItem = await this.cartRepository.updateCartItemQuantity(itemId, quantity);

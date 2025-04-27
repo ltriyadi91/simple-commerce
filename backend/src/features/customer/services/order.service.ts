@@ -44,7 +44,7 @@ export class OrderService {
     }
 
     // Clear cart and cart items
-    await this.cartRepository.clearCart(userId);
+    await this.cartRepository.clearCartItem(userId);
     await this.orderRepository.deleteCartByUserId(userId);
 
     return order;

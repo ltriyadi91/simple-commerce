@@ -9,9 +9,8 @@ import { UserRepository } from '../repositories/user.repository';
 import { loginSchema } from '../schemas/user.schema';
 import { UserService } from '../services/user.service';
 
-// Dependency Injection
 const prismaService = PrismaService.getInstance();
-const prisma = prismaService.client; // Get the PrismaClient instance
+const prisma = prismaService.client;
 const userRepository = new UserRepository(prisma);
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);

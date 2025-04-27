@@ -14,6 +14,8 @@ tags:
     description: Operations for order
   - name: carts
     description: Operations for cart
+  - name: common
+    description: Operations for common
   - name: admin-users
     description: Operations for user - Admin
   - name: admin-products
@@ -197,10 +199,10 @@ paths:
         "500":
           description: Server error
 
-  /api/v1/merchant/products/file:
+  /api/v1/common/uploader:
     post:
       tags:
-        - admin-products
+        - common
       summary: Upload multiple product images
       security:
         - BearerAuth: []
@@ -229,13 +231,11 @@ paths:
         "500":
           description: Server error
 
-  /api/v1/merchant/products/image:
+  /api/v1/common/image:
     post:
       tags:
-        - admin-products
+        - common
       summary: Get product image
-      security:
-        - BearerAuth: []
       requestBody:
         required: true
         content:
