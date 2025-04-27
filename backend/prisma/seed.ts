@@ -1,17 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { env } from '../src/config/env-config';
 
 const prisma = new PrismaClient();
 
-// SEEDER_ADMIN_USERNAME : z.string().email(),
-// SEEDER_ADMIN_PASSWORD : z.string(),
-// SEEDER_CUSTOMER_USERNAME : z.string().email(),
-// SEEDER_CUSTOMER_PASSWORD : z.string(),
-
 async function main() {
   // Seed users
-  const adminHashedPassword = await bcrypt.hash(process.env.SEEDER_ADMIN_USERNAME ?? '', 10);
+  const adminHashedPassword = await bcrypt.hash(process.env.SEEDER_ADMIN_PASSWORD ?? '', 10);
   const customerHashedPassword = await bcrypt.hash(process.env.SEEDER_CUSTOMER_PASSWORD ?? '', 10);
   await prisma.user.createMany({
     data: [

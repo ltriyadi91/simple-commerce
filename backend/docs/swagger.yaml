@@ -68,11 +68,11 @@ components:
         email:
           type: string
           description: the email of the user
-          example: "triyadilukman@gmail.com"
+          example: "admin.test.simplecommerce@yopmail.com"
         password:
           type: string
           description: password
-          example: adminPassword1234
+          example: ''
     AuthCustomer:
       type: object
       required:
@@ -82,11 +82,11 @@ components:
         email:
           type: string
           description: the email of the user
-          example: "triyadilukman92@gmail.com"
+          example: "customer.test.simplecommerce@yopmail.com"
         password:
           type: string
           description: password
-          example: customerPassword1234
+          example: ''
     Register:
       type: object
       required:
