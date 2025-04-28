@@ -79,7 +79,7 @@ export class ProductService {
       ...productData,
       price: productData.price,
       quantity: productData.quantity,
-      discount: productData.discount?.toFixed(2),
+      discount: productData.discount
     }).then(() => {
       if (productData.deletedImageIds) {
         this.imageRepository.deleteImageByProductId(id);

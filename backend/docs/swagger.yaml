@@ -204,8 +204,6 @@ paths:
       tags:
         - common
       summary: Upload multiple product images
-      security:
-        - BearerAuth: []
       consumes:
         - multipart/form-data
       requestBody:
@@ -216,9 +214,11 @@ paths:
               type: object
               properties:
                 image:
-                  type: string
-                  format: binary
-                  description: Image file to upload
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Image files to upload
               required:
                 - image
       responses:
@@ -258,8 +258,6 @@ paths:
       tags:
         - admin-products
       summary: Get a product by id
-      security:
-        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -280,8 +278,6 @@ paths:
       tags:
         - admin-products
       summary: Update a product
-      security:
-        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -308,8 +304,6 @@ paths:
       tags:
         - admin-products
       summary: Delete a product
-      security:
-        - BearerAuth: []
       parameters:
         - name: id
           in: path

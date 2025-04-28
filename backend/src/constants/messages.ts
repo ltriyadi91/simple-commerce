@@ -29,6 +29,7 @@ export const SUCCESS = {
   USER_FOUND: 'User Found',
   REGISTRATION_SUCCESSFUL: 'Registration successful',
   LOGIN_SUCCESSFUL: 'Login successful',
+  LOGOUT_SUCCESSFUL: 'Logout successful',
 
   // product success messages
   PRODUCT_FOUND: 'Product Found',

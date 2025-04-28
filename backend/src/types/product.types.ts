@@ -2,7 +2,7 @@ import { ProductSchema } from "@/features/merchant/schemas/product.schema";
 import z from "zod";
 
 export interface ProductsPaginationQueryTypes {
-  title: string;
+  title: string | undefined;
   minPrice: string;
   maxPrice: string;
   sort: string;
@@ -12,7 +12,7 @@ export interface ProductsPaginationQueryTypes {
 }
 
 export interface ProductsFilterTypes {
-  title?: string;
+  title?: string | undefined;
   price?: {
     gte?: number;
     lte?: number;

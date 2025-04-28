@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ProductService } from '../services/product.service';
 import { ProductsPaginationQueryTypes } from '@/types/product.types';
-import { getFileUrlFromAws, uploadFileToAws } from '@/middleware/aws-s3.middleware';
-import formidable from 'formidable';
 
 export class MerchantProductController {
   private productService: ProductService;
@@ -17,7 +15,7 @@ export class MerchantProductController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { title, minPrice, maxPrice, sort, order, page, limit } = req.query;
+      const { title = '', minPrice = '', maxPrice = '', sort = 'createdAt', order = 'asc', page = '1', limit = '10' } = req.query;
       const result = await this.productService.findAllProducts({
         title,
         minPrice,
@@ -68,6 +66,7 @@ export class MerchantProductController {
       const product = await this.productService.updateProduct(productId, req.body);
       res.status(200).json({ message: 'Product updated successfully', product });
     } catch (err) {
+      console.log('error brooo', { err});
       res.status(500).json({ message: 'Error in updating the product', err });
     }
   }

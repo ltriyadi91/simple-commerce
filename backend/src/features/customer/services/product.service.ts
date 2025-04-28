@@ -3,6 +3,18 @@ import { calculateDiscountedPrice } from '@/util/discount.util';
 import { ProductsPaginationQueryTypes, ProductsFilterTypes } from '@/types/product.types';
 import { unifiedResponse } from 'uni-response';
 import { ERROR, SUCCESS } from '@/constants/messages';
+import { env } from '@/config/env-config';
+
+const productItemFormater = (product: any) => {
+  return {
+    ...product,
+    finalPrice: calculateDiscountedPrice(product.price, product.discount),
+    images: product.images.map((image: { url: string, id: number }) => ({
+      ...image,
+      url: `${env.AWS_S3_ENDPOINT}${image.url}`,
+    })),
+  };
+}
 
 export class ProductService {
   constructor(private readonly productRepository: ProductRepository) {}
@@ -24,10 +36,12 @@ export class ProductService {
 
     const productsWithFinalPrice = products.map(product => ({
       ...product,
-      finalPrice: calculateDiscountedPrice(product.price, product.discount),
+      ...productItemFormater(product),
     }));
 
-    return unifiedResponse(true, SUCCESS.PRODUCT_LIST_FOUND, {
+    productItemFormater
+
+    const result = {
       data: productsWithFinalPrice,
       pagination: {
         total: totalCount,
@@ -35,12 +49,15 @@ export class ProductService {
         page: pageNumber,
         limit: pageSize,
       },
-    })
+    }
+
+    return unifiedResponse(true, SUCCESS.PRODUCT_LIST_FOUND, result)
   }
 
   async findProductById(productId: number) {
     const product = await this.productRepository.findProductById(productId);
     if (!product) return unifiedResponse(false, ERROR.PRODUCT_NOT_FOUND);
-    return unifiedResponse(true, SUCCESS.PRODUCT_FOUND, product);
+    const result = productItemFormater(product);
+    return unifiedResponse(true, SUCCESS.PRODUCT_FOUND, result);
   }
 }

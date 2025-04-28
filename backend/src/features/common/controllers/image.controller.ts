@@ -11,7 +11,7 @@ export class ImageController {
 
   uploadProductImage = async (req: Request, res: Response, next: NextFunction) => {
     const form = formidable({
-      maxFileSize: 1 * 1024 * 1024,
+      maxFileSize: 3 * 1024 * 1024 * 1024,
       keepExtensions: true,
       multiples: true,
     });

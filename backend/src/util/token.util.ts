@@ -7,7 +7,7 @@ const secret: Secret = env.JWT_SECRET as string;
 const generateToken = (userId: number, role = 'user'): string => {
   if (secret) {
     const token = jwt.sign({ userId, role }, secret, {
-      expiresIn: '30d',
+      expiresIn: '7d',
     });
 
     return token;

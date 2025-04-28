@@ -42,12 +42,13 @@ export class ProductRepository {
         id: true,
         createdAt: true,
         updatedAt: true,
+        createdBy: true,
+        updatedBy: true,
       },
     });
   }
 
   async create(data: any) {
-    console.log('cuuuk', {data});
     return await this.prisma.product.create({
       data: {
         ...data,
@@ -62,7 +63,12 @@ export class ProductRepository {
   async update(id: number, data: any) {
     return await this.prisma.product.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        images: data.images?.length ? {
+          create: data.images.map((image: string) => ({ url: image }))
+        } : undefined
+      },
       select: { id: true },
     });
   }
